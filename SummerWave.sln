@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomRenderer", "CustomRenderer\CustomRenderer.csproj", "{E6184AEC-61B3-412E-A3C1-662509A8BF25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationEngine", "SimulationEngine\SimulationEngine.csproj", "{BE7B716B-D74C-4A6D-9628-094CE5C8FF18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationEngine", "SimulationEngine\SimulationEngine.csproj", "{BE7B716B-D74C-4A6D-9628-094CE5C8FF18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{DB2B5881-9F73-4DCD-AE98-863067344C5D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BE7B716B-D74C-4A6D-9628-094CE5C8FF18} = {BE7B716B-D74C-4A6D-9628-094CE5C8FF18}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,10 @@ Global
 		{BE7B716B-D74C-4A6D-9628-094CE5C8FF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE7B716B-D74C-4A6D-9628-094CE5C8FF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE7B716B-D74C-4A6D-9628-094CE5C8FF18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB2B5881-9F73-4DCD-AE98-863067344C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB2B5881-9F73-4DCD-AE98-863067344C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB2B5881-9F73-4DCD-AE98-863067344C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB2B5881-9F73-4DCD-AE98-863067344C5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
