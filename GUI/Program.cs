@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationEngine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,9 @@ namespace GUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            var temp = new Form1();
+            Application.Run(temp);
+
         }
     }
 }
