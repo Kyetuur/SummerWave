@@ -84,6 +84,10 @@
       <Project>{e6184aec-61b3-412e-a3c1-662509a8bf25}</Project>
       <Name>CustomRenderer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SimulationEngine\SimulationEngine.csproj">
+      <Project>{BE7B716B-D74C-4A6D-9628-094CE5C8FF18}</Project>
+      <Name>SimulationEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
