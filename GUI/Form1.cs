@@ -18,7 +18,6 @@ namespace GUI
         public Form1()
         {
             InitializeComponent();
-            setText("XD");
         }
 
         private void Button1_Click(object sender, EventArgs e)

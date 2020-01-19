@@ -17,9 +17,7 @@ namespace GUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var temp = new Form1();
-            Application.Run(temp);
-
+            Application.Run(new Form1());
         }
     }
 }
