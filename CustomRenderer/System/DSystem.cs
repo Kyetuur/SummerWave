@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using SharpDX.Windows;
+using SimulationEngine;
 using SummerWave.Renderer.Graphics.Input;
 
 namespace SummerWave.Renderer.System
@@ -14,14 +16,14 @@ namespace SummerWave.Renderer.System
 
         public DSystem() { }
 
-        public static void StartRenderForm(string title, int width, int height)
+        public static void StartRenderForm(string title, int width, int height,Surface surface)
         {
             DSystem system = new DSystem();
-            system.Initialize(title, width, height, false, false, 0);
+            system.Initialize(title, width, height, false, false, 0,surface);
             system.RunRenderForm();
         }
 
-        public virtual bool Initialize(string title, int width, int height, bool vSync, bool fullScreen, int testTimeSeconds)
+        public virtual bool Initialize(string title, int width, int height, bool vSync, bool fullScreen, int testTimeSeconds,Surface surface)
         {
             bool result = false;
 
@@ -32,7 +34,7 @@ namespace SummerWave.Renderer.System
 
             DApplication = new DApplication();
 
-            if (!DApplication.Initialize(Configuration, RenderForm.Handle))
+            if (!DApplication.Initialize(Configuration, RenderForm.Handle,surface))
                 return false;
 
 
@@ -71,7 +73,7 @@ namespace SummerWave.Renderer.System
         {
 
             Timer.Frame2();
-            
+            //Thread.Sleep(1500);
             if (!DApplication.Frame(Timer.FrameTime))
                 return false;
 

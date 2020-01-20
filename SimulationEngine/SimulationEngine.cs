@@ -7,11 +7,9 @@ namespace SimulationEngine
 {
     public class SurfacePoint
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public double Height { get; set; }
-        public double PotEnergy { get; set; }
-        public double KinEnergy { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Height { get; set; }
         public List<SurfacePoint> Neightbours { get; set; }
         private double m_reynoldsNum;
         public SurfacePoint(int x, int y, double reynoldsNum)
@@ -33,27 +31,27 @@ namespace SimulationEngine
         // https://en.wikipedia.org/wiki/Reynolds_number
         // So, basically, we won't use all the properties of reyNum, but we'll use it
         // to "dampen" the fluid surface
-        private readonly double m_reynoldsNum;
+        private readonly float m_reynoldsNum;
         //
-        private readonly int m_resolution;
+        public int m_resolution { get; set; } 
 
         public bool SummerWaves { get; set; }
         public List<List<SurfacePoint>> Grid { get; set; }
         private List<SurfacePoint> Sources { get; set; }
 
-        double GetNewHeight(SurfacePoint point)
+        float GetNewHeight(SurfacePoint point,double deltaTime)
         {
-            double average = 0;
+            float average = 0;
             foreach (var item in point.Neightbours)
             {
-                average += item.Height;
+                average += item.Height * (float)deltaTime/1000;
             }
 
             average /= point.Neightbours.Count();
 
-            double difference = average - point.Height;
+            float difference = average - point.Height;
 
-            return point.Height + difference * 0.8;
+            return point.Height + difference * 0.8f;
         }
 
 
@@ -63,16 +61,15 @@ namespace SimulationEngine
         }
 
         private long m_iter;
-        public long Recalculate(double timestep)
+        public List<List<SurfacePoint>> Recalculate(double deltaTime)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
 
-            
 
-            List<List<double>> newHeights = new List<List<double>>();
+            List<List<float>> newHeights = new List<List<float>>();
+
             for (int i = 0; i < m_resolution; i++)
             {
-                List<double> temp = new List<double>();
+                List<float> temp = new List<float>();
                 for (int j = 0; j < m_resolution; j++)
                 {
 
@@ -86,6 +83,7 @@ namespace SimulationEngine
             {
                 for (int j = 0; j < m_resolution; j++)
                 {
+
                     if (SummerWaves)
                     {
                         float height = 0;
@@ -106,8 +104,7 @@ namespace SimulationEngine
 
             SetNewHeights(newHeights);
             m_iter++;
-            stopwatch.Stop();
-            return stopwatch.ElapsedMilliseconds;
+            return grid;
         }
 
         private void GeneratePoints()
@@ -162,7 +159,7 @@ namespace SimulationEngine
             }
         }
 
-        public void SetNewHeights(List<List<double>> heights)
+        public void SetNewHeights(List<List<float>> heights)
         {
             for (int i = 0; i < m_resolution; i++)
             {
@@ -173,7 +170,7 @@ namespace SimulationEngine
             }
         }
 
-        public Surface(double reynoldsNum, int resolution)
+        public Surface(float reynoldsNum, int resolution)
         {
             m_reynoldsNum = reynoldsNum;
             m_resolution = resolution;
