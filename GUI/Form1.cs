@@ -37,7 +37,7 @@ namespace GUI
             sur.Recalculate(1);
 
             string surStr = "";
-            foreach (var rows in sur.grid)
+            foreach (var rows in sur.Grid)
             {
                 foreach (var temps in rows)
                 {
@@ -77,7 +77,7 @@ namespace GUI
 
             sur.SetNewHeights(newHeights);
             string surStr = "";
-            foreach (var rows in sur.grid)
+            foreach (var rows in sur.Grid)
             {
                 foreach (var temps in rows)
                 {
