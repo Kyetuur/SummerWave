@@ -31,20 +31,20 @@ namespace SimulationEngine
         // https://en.wikipedia.org/wiki/Reynolds_number
         // So, basically, we won't use all the properties of reyNum, but we'll use it
         // to "dampen" the fluid surface
-        private readonly float m_reynoldsNum;
+        private readonly float WaveLen;
         //
-        public int m_resolution { get; set; } 
+        public int m_resolution { get; set; }
 
         public bool SummerWaves { get; set; }
         public List<List<SurfacePoint>> Grid { get; set; }
         private List<SurfacePoint> Sources { get; set; }
 
-        float GetNewHeight(SurfacePoint point,double deltaTime)
+        float GetNewHeight(SurfacePoint point, double deltaTime)
         {
             float average = 0;
             foreach (var item in point.Neightbours)
             {
-                average += item.Height * (float)deltaTime/1000;
+                average += item.Height * (float)deltaTime / 1000;
             }
 
             average /= point.Neightbours.Count();
@@ -61,6 +61,8 @@ namespace SimulationEngine
         }
 
         private long m_iter;
+        public float DampenFactor { get; set; }
+        public float SimualtionSpeed { get; set; }
         public List<List<SurfacePoint>> Recalculate(double deltaTime)
         {
 
@@ -87,10 +89,10 @@ namespace SimulationEngine
                     if (SummerWaves)
                     {
                         float height = 0;
-                        foreach(var source in Sources)
+                        foreach (var source in Sources)
                         {
                             float dist = Distance(source, Grid[i][j]);
-                            height += 1.0f / (dist * dist) * (float)Math.Sin(dist * 0.5f + m_iter /60f * 2f* Math.PI % (2 * Math.PI));
+                            height += 100f / (float)Math.Pow(dist, DampenFactor) * (float)Math.Sin(dist * WaveLen + m_iter / SimualtionSpeed * 2f * Math.PI % (4 * Math.PI));
                         }
                         newHeights[i][j] = height;
                     }
@@ -116,7 +118,7 @@ namespace SimulationEngine
                 for (int j = 0; j < m_resolution; j++)
                 {
 
-                    temp.Add(new SurfacePoint(i, j, m_reynoldsNum));
+                    temp.Add(new SurfacePoint(i, j, WaveLen));
 
                 }
                 Grid.Add(temp);
@@ -170,14 +172,16 @@ namespace SimulationEngine
             }
         }
 
-        public Surface(float reynoldsNum, int resolution)
+        public Surface(float waveLen, int resolution)
         {
-            m_reynoldsNum = reynoldsNum;
+            WaveLen = waveLen;
             m_resolution = resolution;
             GeneratePoints();
             SummerWaves = false;
             Sources = new List<SurfacePoint>();
             m_iter = 0;
+            DampenFactor = 0.8f;
+            SimualtionSpeed = 120;
         }
 
         public void AddSource(SurfacePoint source)

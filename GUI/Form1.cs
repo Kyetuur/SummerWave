@@ -22,7 +22,7 @@ namespace GUI
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            SummerWave.Renderer.System.DSystem.StartRenderForm("Testowa nazwa", 800, 600,sur);
+            SummerWave.Renderer.System.DSystem.StartRenderForm("Testowa nazwa", 1440, 900,sur);
         }
 
         public void setText(string str)
@@ -68,14 +68,13 @@ namespace GUI
                 newHeights.Add(temp);
             }
 
-            newHeights[0][0] = 100000;
-            newHeights[5][5] = 20;
-            newHeights[7][1] = 24;
-            newHeights[7][2] = 24;
-            newHeights[7][3] = 24;
-            newHeights[8][1] = 24;
 
-            sur.SetNewHeights(newHeights);
+            sur.SummerWaves = true;
+            sur.AddSource(new SurfacePoint(50, 50, 0.5));
+            sur.AddSource(new SurfacePoint(51, 50, 0.5));
+
+            sur.AddSource(new SurfacePoint(20, 60, 0.8));
+            sur.AddSource(new SurfacePoint(10, 70, 30));
             string surStr = "";
             foreach (var rows in sur.Grid)
             {
