@@ -35,7 +35,9 @@ namespace SimulationEngine
         //
         public int m_resolution { get; set; } 
 
-        public List<List<SurfacePoint>> grid { get; set; }
+        public bool SummerWaves { get; set; }
+        public List<List<SurfacePoint>> Grid { get; set; }
+        private List<SurfacePoint> Sources { get; set; }
 
         float GetNewHeight(SurfacePoint point,double deltaTime)
         {
@@ -52,10 +54,19 @@ namespace SimulationEngine
             return point.Height + difference * 0.8f;
         }
 
+
+        private float Distance(SurfacePoint a, SurfacePoint b)
+        {
+            return (float)Math.Sqrt(Math.Pow((b.X - a.X), 2) + Math.Pow((b.Y - a.Y), 2));
+        }
+
+        private long m_iter;
         public List<List<SurfacePoint>> Recalculate(double deltaTime)
         {
 
+
             List<List<float>> newHeights = new List<List<float>>();
+
             for (int i = 0; i < m_resolution; i++)
             {
                 List<float> temp = new List<float>();
@@ -72,17 +83,33 @@ namespace SimulationEngine
             {
                 for (int j = 0; j < m_resolution; j++)
                 {
-                    newHeights[i][j] = GetNewHeight(grid[i][j],deltaTime);
+
+                    if (SummerWaves)
+                    {
+                        float height = 0;
+                        foreach(var source in Sources)
+                        {
+                            float dist = Distance(source, Grid[i][j]);
+                            height += 1.0f / (dist * dist) * (float)Math.Sin(dist * 0.5f + m_iter /60f * 2f* Math.PI % (2 * Math.PI));
+                        }
+                        newHeights[i][j] = height;
+                    }
+                    else
+                    {
+                        newHeights[i][j] = GetNewHeight(Grid[i][j]);
+                    }
                 }
             }
 
+
             SetNewHeights(newHeights);
+            m_iter++;
             return grid;
         }
 
         private void GeneratePoints()
         {
-            grid = new List<List<SurfacePoint>>();
+            Grid = new List<List<SurfacePoint>>();
             for (int i = 0; i < m_resolution; i++)
             {
                 List<SurfacePoint> temp = new List<SurfacePoint>();
@@ -92,7 +119,7 @@ namespace SimulationEngine
                     temp.Add(new SurfacePoint(i, j, m_reynoldsNum));
 
                 }
-                grid.Add(temp);
+                Grid.Add(temp);
             }
 
             for (int i = 0; i < m_resolution; i++)
@@ -124,10 +151,10 @@ namespace SimulationEngine
                         if ((i + coords.Item1 >= 0) && (i + coords.Item1 < m_resolution)
                             && (j + coords.Item2 >= 0) && (j + coords.Item2 < m_resolution))
                         {
-                            neightbours.Add(grid[i + coords.Item1][j + coords.Item2]);
+                            neightbours.Add(Grid[i + coords.Item1][j + coords.Item2]);
                         }
                     }
-                    (grid[i][j]).AddNeightbours(neightbours);
+                    (Grid[i][j]).AddNeightbours(neightbours);
                 }
             }
         }
@@ -138,7 +165,7 @@ namespace SimulationEngine
             {
                 for (int j = 0; j < m_resolution; j++)
                 {
-                    grid[i][j].Height = heights[i][j];
+                    Grid[i][j].Height = heights[i][j];
                 }
             }
         }
@@ -148,6 +175,14 @@ namespace SimulationEngine
             m_reynoldsNum = reynoldsNum;
             m_resolution = resolution;
             GeneratePoints();
+            SummerWaves = false;
+            Sources = new List<SurfacePoint>();
+            m_iter = 0;
+        }
+
+        public void AddSource(SurfacePoint source)
+        {
+            Sources.Add(source);
         }
 
     }
