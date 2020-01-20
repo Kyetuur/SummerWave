@@ -59,7 +59,7 @@ namespace SimulationEngine
 
         private float Distance(SurfacePoint a, SurfacePoint b)
         {
-            return 1;
+            return (float)Math.Sqrt(Math.Pow((b.X - a.X), 2) + Math.Pow((b.Y - a.Y), 2));
         }
 
         private long m_iter;
