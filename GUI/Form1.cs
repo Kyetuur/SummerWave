@@ -53,7 +53,7 @@ namespace GUI
         private void button3_Click(object sender, EventArgs e)
         {
 
-            int res = 20;
+            int res = 100;
             sur = new Surface(4, res);
             List<List<float>> newHeights = new List<List<float>>();
             for (int i = 0; i < res; i++)

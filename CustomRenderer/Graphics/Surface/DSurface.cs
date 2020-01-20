@@ -59,24 +59,48 @@ namespace SummerWave.Renderer.Graphics.Models
 
         private (int[], DVertexType[]) GetBuffers()
         {
-            VertexCount = (m_TerrainWidth - 1) * (m_TerrainHeight - 1) * 8;
-            IndexCount = VertexCount;
+            VertexCount = (m_TerrainWidth) * (m_TerrainHeight) *8 -2;
+            IndexCount = VertexCount ;
             int[] indices = new int[IndexCount];
             DVertexType[] vertices = new DVertexType[VertexCount];
             int index = 0;
-
-            for (int j = 0; j < (m_TerrainHeight - 1); j++)
+            int i = 0;
+            for (int j = 0; j < m_TerrainHeight; j++)
             {
-                for (int i = 0; i < (m_TerrainWidth - 1); i++)
+                for ( i = 0; i < m_TerrainWidth ; i++)
                 {
                     float positionX = (float)i;
                     float positionZ = (float)j;
-                    vertices[index].position = new Vector3(positionX, _surface.grid[i][j].Height /100, positionZ);
+                    vertices[index].position = new Vector3(positionX,_surface.grid[i][j].Height /100, positionZ);
                     vertices[index].color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-                    indices[index] = index;
                     index++;
                 }
             }
+
+            indices = new int[IndexCount];
+            index = 0;
+            try
+            {
+                for (int x = 0; x < m_TerrainWidth -1; x++)
+                {
+                    for (int z = 0; z < m_TerrainWidth -1; z++)
+                    {
+                        int offset = x * m_TerrainWidth + z;
+                        indices[index] = (short)(offset + 0);
+                        indices[index + 1] = (short)(offset + 1);
+                        indices[index + 2] = (short)(offset + m_TerrainWidth);
+                        indices[index + 3] = (short)(offset + 1);
+                        indices[index + 4] = (short)(offset + m_TerrainWidth + 1);
+                        indices[index + 5] = (short)(offset + m_TerrainWidth);
+                        index += 6;
+                    }
+                }
+            }catch(Exception ex)
+            {
+                var z = ex;
+                Console.WriteLine(z);
+            }
+
 
             return (indices,vertices);
         }
@@ -105,24 +129,7 @@ namespace SummerWave.Renderer.Graphics.Models
         {
             try
             {
-                VertexCount = (m_TerrainHeight - 1) * (m_TerrainWidth - 1) * 8;
-                IndexCount = VertexCount;
-                DVertexType[] vertices = new DVertexType[VertexCount];
-                int[] indices = new int[IndexCount];
-                int index = 0;
-
-                for (int j = 0; j < (m_TerrainHeight - 1); j++)
-                {
-                    for (int i = 0; i < (m_TerrainWidth - 1); i++)
-                    {
-                        float positionX = (float)i;
-                        float positionZ = (float)j;
-                        vertices[index].position = new Vector3(positionX, newPoints[i][j].Height /100, positionZ);
-                        vertices[index].color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-                        indices[index] = index;
-                        index++;
-                    }
-                }
+                (var indices, var vertices) = GetBuffers();
 
                 VertexBuffer = SharpDX.Direct3D11.Buffer.Create(_device, BindFlags.VertexBuffer, vertices);
                 IndexBuffer = SharpDX.Direct3D11.Buffer.Create(_device, BindFlags.IndexBuffer, indices);
@@ -141,7 +148,7 @@ namespace SummerWave.Renderer.Graphics.Models
         {
             deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(VertexBuffer, Utilities.SizeOf<DVertexType>(), 0));
             deviceContext.InputAssembler.SetIndexBuffer(IndexBuffer, Format.R32_UInt, 0);
-            deviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineList;
+            deviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStripWithAdjacency;
         }
     }
 }
