@@ -22,7 +22,7 @@ namespace GUI
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            SummerWave.Renderer.System.DSystem.StartRenderForm("Testowa nazwa", 800, 600);
+            SummerWave.Renderer.System.DSystem.StartRenderForm("Testowa nazwa", 800, 600,sur);
         }
 
         public void setText(string str)
@@ -55,10 +55,10 @@ namespace GUI
 
             int res = 20;
             sur = new Surface(4, res);
-            List<List<double>> newHeights = new List<List<double>>();
+            List<List<float>> newHeights = new List<List<float>>();
             for (int i = 0; i < res; i++)
             {
-                List<double> temp = new List<double>();
+                List<float> temp = new List<float>();
                 for (int j = 0; j < res; j++)
                 {
 

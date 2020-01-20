@@ -97,6 +97,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SimulationEngine\SimulationEngine.csproj">
+      <Project>{BE7B716B-D74C-4A6D-9628-094CE5C8FF18}</Project>
+      <Name>SimulationEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

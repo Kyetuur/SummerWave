@@ -5,6 +5,7 @@ using SummerWave.Renderer.Graphics.Models;
 using SharpDX;
 using System;
 using System.Threading;
+using SimulationEngine;
 
 namespace SummerWave.Renderer.System
 {
@@ -19,7 +20,7 @@ namespace SummerWave.Renderer.System
         public DSurface Terrain { get; set; }
         public DColorShader ColorShader { get; set; }
 
-        public bool Initialize(DSystemConfiguration configuration, IntPtr windowHandle)
+        public bool Initialize(DSystemConfiguration configuration, IntPtr windowHandle,Surface surface)
         {
             try
             {
@@ -32,17 +33,20 @@ namespace SummerWave.Renderer.System
                 Camera = new DCamera();
                 Camera.SetPosition(0.0f, 0.0f, -1.0f);
                 Camera.Render();
-                Camera.SetPosition(50.0f, 2.0f, -7.0f);
-
+                Camera.SetPosition(50.0f, 2.0f, 10.0f);
 
                 Terrain = new DSurface();
-                Terrain.Initialize(D3D.Device);
+                Terrain.Initialize(D3D.Device, surface);
 
                 ColorShader = new DColorShader();
                 ColorShader.Initialize(D3D.Device, windowHandle);
 
                 Position = new DPosition();
-                Position.SetPosition(Camera.GetPosition().X, Camera.GetPosition().Y, Camera.GetPosition().Z);
+                Position.SetPosition(Camera.GetPosition().X, Camera.GetPosition().Y , Camera.GetPosition().Z); // Ustawienie Position == Camera
+                Camera.SetRotation(0.32f, -0.9f, 0);
+                Position.RotationX = 0.32f;
+                Position.RotationY = -90f;
+
 
                 PositionChangeHandler = new DPositionChangeHandler(Position, Input);
                 return true;
@@ -80,51 +84,29 @@ namespace SummerWave.Renderer.System
         }
         public bool Frame(float frameTime)
         {
-            // Do the frame input processing.
             HandleInput(frameTime);
 
-            // Render the graphics.
-            if (!RenderGraphics())
+            if (!RenderGraphics(frameTime))
                 return false;
 
             return true;
         }
-        private bool RenderGraphics()
+        private bool RenderGraphics(double frameTime)
         {
-            // Clear the scene.
             D3D.BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-            // Generate the view matrix based on the camera's position.
             Camera.Render();
 
-            // Get the world, view, projection, and ortho matrices from the camera and Direct3D objects.
             Matrix worldMatrix = D3D.WorldMatrix;
             Matrix cameraViewMatrix = Camera.ViewMatrix;
             Matrix projectionMatrix = D3D.ProjectionMatrix;
             Matrix orthoD3DMatrix = D3D.OrthoMatrix;
 
-            // Render the terrain buffers.
-            Terrain.Render(D3D.DeviceContext);
+            Terrain.Render(D3D.DeviceContext,frameTime);
 
-            // Render the model using the color shader.
             if (!ColorShader.Render(D3D.DeviceContext, Terrain.IndexCount, worldMatrix, cameraViewMatrix, projectionMatrix))
                 return false;
 
-            // Turn off the Z buffer to begin all 2D rendering.
-            D3D.TurnZBufferOff();
-
-            // Turn on the alpha blending before rendering the text.
-            D3D.TurnOnAlphaBlending();
-
-        
-
-            // Turn off alpha blending after rendering the text.
-            D3D.TurnOffAlphaBlending();
-
-            // Turn the Z buffer back on now that all 2D rendering has completed.
-            D3D.TurnZBufferOn();
-
-            // Present the rendered scene to the screen.
             D3D.EndScene();
 
             return true;
