@@ -96,7 +96,7 @@ namespace SimulationEngine
                     }
                     else
                     {
-                        newHeights[i][j] = GetNewHeight(Grid[i][j]);
+                        newHeights[i][j] = GetNewHeight(Grid[i][j], deltaTime);
                     }
                 }
             }
@@ -104,7 +104,7 @@ namespace SimulationEngine
 
             SetNewHeights(newHeights);
             m_iter++;
-            return grid;
+            return Grid;
         }
 
         private void GeneratePoints()
