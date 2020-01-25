@@ -22,7 +22,7 @@ namespace GUI
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            SummerWave.Renderer.System.DSystem.StartRenderForm("Testowa nazwa", 800, 600,sur);
+            SummerWave.Renderer.System.DSystem.StartRenderForm("Testowa nazwa", 1440, 900,sur);
         }
 
         public void setText(string str)
@@ -54,7 +54,7 @@ namespace GUI
         {
 
             int res = 100;
-            sur = new Surface(4, res);
+            sur = new Surface(res);
             List<List<float>> newHeights = new List<List<float>>();
             for (int i = 0; i < res; i++)
             {
@@ -68,25 +68,17 @@ namespace GUI
                 newHeights.Add(temp);
             }
 
-            newHeights[0][0] = 100000;
-            newHeights[5][5] = 20;
-            newHeights[7][1] = 24;
-            newHeights[7][2] = 24;
-            newHeights[7][3] = 24;
-            newHeights[8][1] = 24;
 
-            sur.SetNewHeights(newHeights);
-            string surStr = "";
-            foreach (var rows in sur.Grid)
-            {
-                foreach (var temps in rows)
-                {
-                    surStr += Math.Round(temps.Height).ToString();
-                    surStr += "   ";
-                }
-                surStr += "\r\n";
-            }
-            setText(surStr);
+            sur.SummerWaves = true;
+            sur.SimualtionSpeed = 0.3f;
+            sur.WaveLen = 1.2f;
+            sur.DampenFactor = 0.8f;
+            
+            //sur.AddSource(new SurfacePoint(30, 45, 400f));
+
+            sur.AddSource(new SurfacePoint(60, 60, 600f));
+
+            setText("surface generated");
         }
     }
 }
