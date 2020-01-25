@@ -11,13 +11,11 @@ namespace SimulationEngine
         public float Y { get; set; }
         public float Height { get; set; }
         public List<SurfacePoint> Neightbours { get; set; }
-        private double m_reynoldsNum;
-        public SurfacePoint(int x, int y, double reynoldsNum)
+        public SurfacePoint(int x, int y, float height)
         {
             X = x;
             Y = y;
-            Height = 0;
-            m_reynoldsNum = reynoldsNum;
+            Height = height;
         }
 
         public void AddNeightbours(List<SurfacePoint> neightbours)
@@ -28,14 +26,12 @@ namespace SimulationEngine
 
     public class Surface
     {
-        // https://en.wikipedia.org/wiki/Reynolds_number
-        // So, basically, we won't use all the properties of reyNum, but we'll use it
-        // to "dampen" the fluid surface
-        private readonly float WaveLen;
+        public float WaveLen { get; set; }
         //
-        public int m_resolution { get; set; }
+        public int Resolution { get; set; }
 
         public bool SummerWaves { get; set; }
+        //dafult value is true. if you set it to false, then no nice waves will be generated
         public List<List<SurfacePoint>> Grid { get; set; }
         private List<SurfacePoint> Sources { get; set; }
 
@@ -55,24 +51,26 @@ namespace SimulationEngine
         }
 
 
-        private float Distance(SurfacePoint a, SurfacePoint b)
+        public float Distance(SurfacePoint a, SurfacePoint b)
         {
             return (float)Math.Sqrt(Math.Pow((b.X - a.X), 2) + Math.Pow((b.Y - a.Y), 2));
         }
 
         private long m_iter;
         public float DampenFactor { get; set; }
+        //default value is 0.8f. The higher you set it, the smaller the waves will get
         public float SimualtionSpeed { get; set; }
+        //default value is 1. If you set it lower, the simulation will be computed in smaller timesteps
         public List<List<SurfacePoint>> Recalculate(double deltaTime)
         {
 
 
             List<List<float>> newHeights = new List<List<float>>();
 
-            for (int i = 0; i < m_resolution; i++)
+            for (int i = 0; i < Resolution; i++)
             {
                 List<float> temp = new List<float>();
-                for (int j = 0; j < m_resolution; j++)
+                for (int j = 0; j < Resolution; j++)
                 {
 
                     temp.Add(0);
@@ -81,9 +79,9 @@ namespace SimulationEngine
                 newHeights.Add(temp);
             }
 
-            for (int i = 0; i < m_resolution; i++)
+            for (int i = 0; i < Resolution; i++)
             {
-                for (int j = 0; j < m_resolution; j++)
+                for (int j = 0; j < Resolution; j++)
                 {
 
                     if (SummerWaves)
@@ -92,7 +90,7 @@ namespace SimulationEngine
                         foreach (var source in Sources)
                         {
                             float dist = Distance(source, Grid[i][j]);
-                            height += 100f / (float)Math.Pow(dist, DampenFactor) * (float)Math.Sin(dist * WaveLen + m_iter / SimualtionSpeed * 2f * Math.PI % (4 * Math.PI));
+                            height += source.Height / (float)Math.Pow(dist, DampenFactor) * (float)Math.Cos(dist/WaveLen - m_iter / (60/SimualtionSpeed) * 2f * Math.PI % (4 * Math.PI));
                         }
                         newHeights[i][j] = height;
                     }
@@ -112,21 +110,21 @@ namespace SimulationEngine
         private void GeneratePoints()
         {
             Grid = new List<List<SurfacePoint>>();
-            for (int i = 0; i < m_resolution; i++)
+            for (int i = 0; i < Resolution; i++)
             {
                 List<SurfacePoint> temp = new List<SurfacePoint>();
-                for (int j = 0; j < m_resolution; j++)
+                for (int j = 0; j < Resolution; j++)
                 {
 
-                    temp.Add(new SurfacePoint(i, j, WaveLen));
+                    temp.Add(new SurfacePoint(i, j, 0));
 
                 }
                 Grid.Add(temp);
             }
 
-            for (int i = 0; i < m_resolution; i++)
+            for (int i = 0; i < Resolution; i++)
             {
-                for (int j = 0; j < m_resolution; j++)
+                for (int j = 0; j < Resolution; j++)
                 {
                     List<SurfacePoint> neightbours = new List<SurfacePoint>();
                     // that's our point m_surface[i][j]
@@ -150,8 +148,8 @@ namespace SimulationEngine
 
                     foreach (var coords in neightCoord)
                     {
-                        if ((i + coords.Item1 >= 0) && (i + coords.Item1 < m_resolution)
-                            && (j + coords.Item2 >= 0) && (j + coords.Item2 < m_resolution))
+                        if ((i + coords.Item1 >= 0) && (i + coords.Item1 < Resolution)
+                            && (j + coords.Item2 >= 0) && (j + coords.Item2 < Resolution))
                         {
                             neightbours.Add(Grid[i + coords.Item1][j + coords.Item2]);
                         }
@@ -163,25 +161,25 @@ namespace SimulationEngine
 
         public void SetNewHeights(List<List<float>> heights)
         {
-            for (int i = 0; i < m_resolution; i++)
+            for (int i = 0; i < Resolution; i++)
             {
-                for (int j = 0; j < m_resolution; j++)
+                for (int j = 0; j < Resolution; j++)
                 {
                     Grid[i][j].Height = heights[i][j];
                 }
             }
         }
 
-        public Surface(float waveLen, int resolution)
+        public Surface( int resolution)
         {
-            WaveLen = waveLen;
-            m_resolution = resolution;
+            WaveLen = 4;
+            Resolution = resolution;
             GeneratePoints();
-            SummerWaves = false;
+            SummerWaves = true;
             Sources = new List<SurfacePoint>();
             m_iter = 0;
-            DampenFactor = 0.8f;
-            SimualtionSpeed = 120;
+            DampenFactor = 1f;
+            SimualtionSpeed = 1f;
         }
 
         public void AddSource(SurfacePoint source)

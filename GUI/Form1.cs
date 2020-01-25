@@ -54,7 +54,7 @@ namespace GUI
         {
 
             int res = 100;
-            sur = new Surface(4, res);
+            sur = new Surface(res);
             List<List<float>> newHeights = new List<List<float>>();
             for (int i = 0; i < res; i++)
             {
@@ -70,22 +70,15 @@ namespace GUI
 
 
             sur.SummerWaves = true;
-            sur.AddSource(new SurfacePoint(50, 50, 0.5));
-            sur.AddSource(new SurfacePoint(51, 50, 0.5));
+            sur.SimualtionSpeed = 0.3f;
+            sur.WaveLen = 1.2f;
+            sur.DampenFactor = 0.8f;
+            
+            //sur.AddSource(new SurfacePoint(30, 45, 400f));
 
-            sur.AddSource(new SurfacePoint(20, 60, 0.8));
-            sur.AddSource(new SurfacePoint(10, 70, 30));
-            string surStr = "";
-            foreach (var rows in sur.Grid)
-            {
-                foreach (var temps in rows)
-                {
-                    surStr += Math.Round(temps.Height).ToString();
-                    surStr += "   ";
-                }
-                surStr += "\r\n";
-            }
-            setText(surStr);
+            sur.AddSource(new SurfacePoint(60, 60, 600f));
+
+            setText("surface generated");
         }
     }
 }

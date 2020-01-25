@@ -30,8 +30,8 @@ namespace SummerWave.Renderer.Graphics.Models
 
         public void Initialize(SharpDX.Direct3D11.Device device, SimulationEngine.Surface surface)
         {
-            m_TerrainWidth =  surface.m_resolution; 
-            m_TerrainHeight = surface.m_resolution;
+            m_TerrainWidth =  surface.Resolution; 
+            m_TerrainHeight = surface.Resolution;
             _surface = surface;
             InitializeBuffers(device);
         }
