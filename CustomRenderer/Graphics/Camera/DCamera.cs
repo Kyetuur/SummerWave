@@ -36,13 +36,10 @@ namespace SummerWave.Renderer.Graphics.Camera
             float pitch = RotationX.ToRadians();
             float yaw = RotationY.ToRadians();
             float roll = RotationZ.ToRadians();
-
             Matrix rotationMatrix = Matrix.RotationYawPitchRoll(yaw, pitch, roll);
             lookAt = Vector3.TransformCoordinate(lookAt, rotationMatrix);
             lookAt = position + lookAt;
             Vector3 up = Vector3.TransformCoordinate(Vector3.UnitY, rotationMatrix);
-            
-
             ViewMatrix = Matrix.LookAtLH(position, lookAt, up);
         }
     }

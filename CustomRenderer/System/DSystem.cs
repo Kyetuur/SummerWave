@@ -1,9 +1,7 @@
 ﻿using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
 using SharpDX.Windows;
 using SimulationEngine;
-using SummerWave.Renderer.Graphics.Input;
 
 namespace SummerWave.Renderer.System
 {
@@ -13,39 +11,23 @@ namespace SummerWave.Renderer.System
         public DSystemConfiguration Configuration { get; private set; }
         public DApplication DApplication { get; set; }
         public DTimer Timer { get; private set; }
-
         public DSystem() { }
-
-        public static void StartRenderForm(string title, int width, int height,Surface surface)
+        public static void StartRenderForm(string title, int width, int height,bool fullScreen,Surface surface)
         {
             DSystem system = new DSystem();
-            system.Initialize(title, width, height, false, false, 0,surface);
+            system.Initialize(title, width, height, fullScreen,surface);
             system.RunRenderForm();
         }
-
-        public virtual bool Initialize(string title, int width, int height, bool vSync, bool fullScreen, int testTimeSeconds,Surface surface)
+        public virtual void Initialize(string title, int width, int height, bool fullScreen,Surface surface)
         {
-            bool result = false;
-
             if (Configuration == null)
-                Configuration = new DSystemConfiguration(title, width, height, fullScreen, vSync);
+                Configuration = new DSystemConfiguration(title, width, height, fullScreen);
 
             InitializeWindows(title);
-
             DApplication = new DApplication();
-
-            if (!DApplication.Initialize(Configuration, RenderForm.Handle,surface))
-                return false;
-
-
+            DApplication.Initialize(Configuration, RenderForm.Handle, surface);
             Timer = new DTimer();
-            if (!Timer.Initialize())
-            {
-                MessageBox.Show("Could not initialize Timer object", "Error", MessageBoxButtons.OK);
-                return false;
-            }
-
-            return result;
+            Timer.Initialize();
         }
         private void InitializeWindows(string title)
         {
@@ -59,39 +41,17 @@ namespace SummerWave.Renderer.System
             };
 
             RenderForm.Show();
-            RenderForm.Location = new Point((width / 2) - (Configuration.Width / 2), (height / 2) - (Configuration.Height / 2));
+            RenderForm.Location = new Point((width / 2) - (Configuration.Width / 2), (height / 2) - (Configuration.Height / 2)); // Wysrodkowanie
         }
         private void RunRenderForm()
         {
-            RenderLoop.Run(RenderForm, () =>
-            {
-                if (!Frame())
-                    ShutDown();
-            });
+            RenderLoop.Run(RenderForm, Frame);
         }
-        public bool Frame()
+        public void Frame()
         {
-
             Timer.Frame2();
-            //Thread.Sleep(1500);
-            if (!DApplication.Frame(Timer.FrameTime))
-                return false;
+            DApplication.Frame(Timer.FrameTime);
+        }
 
-            return true;
-        }
-        public void ShutDown()
-        {
-            ShutdownWindows();
-            Timer = null;
-
-            DApplication?.Shutdown();
-            DApplication = null;
-            Configuration = null;
-        }
-        private void ShutdownWindows()
-        {
-            RenderForm?.Dispose();
-            RenderForm = null;
-        }
     }
 }

@@ -49,9 +49,9 @@ namespace SummerWave.Renderer.Graphics.Input
             catch(SharpDX.SharpDXException ex) when (ex.Descriptor == ResultCode.InputLost || ex.Descriptor == ResultCode.NotAcquired) //Lost focusu
             {
                 try{
-                    _input.Keyboard.Acquire();
+                    _input.Keyboard.Acquire(); // Retry aquire keyboard
                 }catch(SharpDX.SharpDXException)
-                {
+                {//tbh we cannot do anything now
                 }
                 return Enumerable.Empty<KeyHandler>();
             }

@@ -8,9 +8,8 @@ using SummerWave.Renderer.Graphics.Models;
 
 namespace SummerWave.Renderer.Graphics
 {
-    public class DColorShader                   // 191 lines
+    public class DColorShader
     {
-        // Structures.
         [StructLayout(LayoutKind.Sequential)]
         internal struct DMatrixBuffer
         {
@@ -18,17 +17,12 @@ namespace SummerWave.Renderer.Graphics
             public Matrix view;
             public Matrix projection;
         }
-
-        // Properties.
         public VertexShader VertexShader { get; set; }
         public PixelShader PixelShader { get; set; }
         public InputLayout Layout { get; set; }
         public SharpDX.Direct3D11.Buffer ConstantMatrixBuffer { get; set; }
-
-        // Constructor
         public DColorShader() { }
 
-        // Methods.
         public void Initialize(Device device, IntPtr windowsHandle)
         {
             InitializeShader(device, windowsHandle, @"color.vs", @"color.ps");
@@ -94,29 +88,13 @@ namespace SummerWave.Renderer.Graphics
                 throw new ShaderNotInitializedException();
             }
         }
-        public void ShutDown()
+
+        public void Render(DeviceContext deviceContext, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
         {
-            ShuddownShader();
-        }
-        private void ShuddownShader()
-        {
-            ConstantMatrixBuffer?.Dispose();
-            ConstantMatrixBuffer = null;
-            Layout?.Dispose();
-            Layout = null;
-            PixelShader?.Dispose();
-            PixelShader = null;
-            VertexShader?.Dispose();
-            VertexShader = null;
-        }
-        public bool Render(DeviceContext deviceContext, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
-        {
-            if (!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix))
-                return false;
+            SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
             RenderShader(deviceContext, indexCount);
-            return true;
         }
-        private bool SetShaderParameters(DeviceContext deviceContext, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
+        private void SetShaderParameters(DeviceContext deviceContext, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
         {
             try
             {
@@ -127,7 +105,7 @@ namespace SummerWave.Renderer.Graphics
                 DataStream mappedResource;
                 deviceContext.MapSubresource(ConstantMatrixBuffer, MapMode.WriteDiscard, MapFlags.None, out mappedResource);
 
-                DMatrixBuffer matrixBuffer = new DMatrixBuffer() 
+                DMatrixBuffer matrixBuffer = new DMatrixBuffer()
                 {
                     world = worldMatrix,
                     view = viewMatrix,
@@ -141,12 +119,11 @@ namespace SummerWave.Renderer.Graphics
 
                 deviceContext.VertexShader.SetConstantBuffer(bufferSlotNuber, ConstantMatrixBuffer);
 
-                return true;
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
-            }
+                throw ex;
+            }            
         }
         private void RenderShader(DeviceContext deviceContext, int indexCount)
         {

@@ -22,7 +22,9 @@ namespace GUI
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            SummerWave.Renderer.System.DSystem.StartRenderForm("Testowa nazwa", 1440, 900,sur);
+            if (sur == null)
+                button3_Click(null, null);
+            SummerWave.Renderer.System.DSystem.StartRenderForm("Surface Rendering", 1920, 1080,false,sur);
         }
 
         public void setText(string str)
@@ -47,7 +49,6 @@ namespace GUI
                 surStr += "\r\n";
             }
             setText(surStr);
-
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -67,17 +68,11 @@ namespace GUI
                 }
                 newHeights.Add(temp);
             }
-
-
             sur.SummerWaves = true;
             sur.SimualtionSpeed = 0.3f;
             sur.WaveLen = 1.2f;
             sur.DampenFactor = 0.8f;
-            
-            //sur.AddSource(new SurfacePoint(30, 45, 400f));
-
             sur.AddSource(new SurfacePoint(60, 60, 600f));
-
             setText("surface generated");
         }
     }
