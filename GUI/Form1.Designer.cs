@@ -1,6 +1,8 @@
-﻿namespace GUI
+﻿using System.Drawing;
+
+namespace GUI
 {
-    partial class Form1
+    partial class MainMenu
     {
         /// <summary>
         /// Wymagana zmienna projektanta.
@@ -38,11 +40,14 @@
             // 
             this.button1.Location = new System.Drawing.Point(29, 12);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(150, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
+            this.button1.Text = "Show Surface";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.Button1_Click);
+            this.button1.BackColor = Color.Red;
+            this.button1.ForeColor = Color.Yellow;
+            this.button1.Hide();
             // 
             // button2
             // 
@@ -81,8 +86,8 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "Main Menu";
+            this.Text = "Main Menu";
             this.ResumeLayout(false);
 
         }
