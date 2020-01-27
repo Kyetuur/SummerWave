@@ -13,9 +13,9 @@ using SummerWave.Renderer;
 
 namespace GUI
 {
-    public partial class Form1 : Form
+    public partial class MainMenu : Form
     {
-        public Form1()
+        public MainMenu()
         {
             InitializeComponent();
         }
@@ -75,6 +75,7 @@ namespace GUI
             sur.AddSource(new SurfacePoint(60, 60, 600f));
             sur.AddSource(new SurfacePoint(90, 60, 600f));
             setText("surface generated");
+            button1.Show();
         }
     }
 }
