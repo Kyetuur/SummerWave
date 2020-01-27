@@ -73,6 +73,7 @@ namespace GUI
             sur.WaveLen = 1.2f;
             sur.DampenFactor = 0.8f;
             sur.AddSource(new SurfacePoint(60, 60, 600f));
+            sur.AddSource(new SurfacePoint(90, 60, 600f));
             setText("surface generated");
         }
     }
