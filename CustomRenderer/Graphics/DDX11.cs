@@ -9,6 +9,10 @@ using System.Windows.Forms;
 
 namespace SummerWave.Renderer.Graphics
 {
+    #region credits
+    // This class provide base low-level functionality, it was made by
+    // https://github.com/Dan6040/SharpDX-Rastertek-Tutorials/blob/master/DSharpDXRastertek/Series1/TutTerr01/Graphics/DDX11Class4.c
+    #endregion
     public class DDX11
     {
         public int VideoCardMemory { get; private set; }
@@ -248,37 +252,7 @@ namespace SummerWave.Renderer.Graphics
                 throw new DDeviceNotInitialized();
             }
         }
-        public void ShutDown()
-        {
-            // Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
-            SwapChain?.SetFullscreenState(false, null);
-
-            // Dispose of all objects.
-            AlphaEnableBlendingState?.Dispose();
-            AlphaEnableBlendingState = null;
-            AlphaDisableBlendingState?.Dispose();
-            AlphaDisableBlendingState = null;
-            DepthDisabledStencilState?.Dispose();
-            DepthDisabledStencilState = null;
-            RasterState?.Dispose();
-            RasterState = null;
-            DepthStencilView?.Dispose();
-            DepthStencilView = null;
-            DepthStencilState?.Dispose();
-            DepthStencilState = null;
-            DepthStencilBuffer?.Dispose();
-            DepthStencilBuffer = null;
-            RenderTargetView?.Dispose();
-            RenderTargetView = null;
-            DeviceContext?.Dispose();
-            DeviceContext = null;
-            Device?.Dispose();
-            Device = null;
-            SwapChain?.Dispose();
-            SwapChain = null;
-        }
-
-
+       
         public void BeginScene(float red, float green, float blue, float alpha)
         {
             BeginScene(new Color4(red, green, blue, alpha));
