@@ -61,8 +61,18 @@ namespace SummerWave.Renderer.Graphics.Models
                 {
                     float positionX = (float)i;
                     float positionZ = (float)j;
-                    vertices[index].position = new Vector3(positionX, _surface.Grid[i][j].Height/100, positionZ);
-                    vertices[index].color = new Vector4(_surface.Grid[i][j].Height / 100 + 0.5f, 0,0,1f);
+                    if (i == 0 || i == 1 || j == 0 || j == 1 || j == Resolution - 1 || i == Resolution - 1 || j == Resolution - 2 || i == Resolution - 2)
+                    {
+                        vertices[index].position = new Vector3(positionX,-12, positionZ);
+                        vertices[index].color = new Vector4(0, 0, 0, 0);
+                    }
+                    else
+                    {
+                        vertices[index].position = new Vector3(positionX, _surface.Grid[i][j].Height / 100, positionZ);
+                        vertices[index].color = new Vector4(_surface.Grid[i][j].Height /1000, _surface.Grid[i][j].Height / 100, 1, 1f);
+                    }
+
+
                     index++;
                 }
             }
