@@ -16,12 +16,14 @@ namespace GUI
     public partial class MainMenu : Form
     {
         private Surface _surface;
-        private float _speed;
         public MainMenu()
         {
             
             InitializeComponent();
             this.textBox1.KeyPress += new KeyPressEventHandler(CheckEnterKeyPress);
+            this.textBox2.KeyPress += new KeyPressEventHandler(CheckEnterKeyPress);
+            this.textBox3.KeyPress += new KeyPressEventHandler(CheckEnterKeyPress);
+            HideLabelsAndTextBoxes();
         }
 
         private void CheckEnterKeyPress(object sender, KeyPressEventArgs e)
@@ -29,10 +31,39 @@ namespace GUI
             if (e.KeyChar == (char)Keys.Enter)
             {
                 float tmpSpeed;
+                float waveLength;
+                float factor;
+
                 float.TryParse(textBox1.Text, out tmpSpeed);
-                //var tmpSpeed = float.TryParse(textBox1.Text);
+                float.TryParse(textBox2.Text, out waveLength);
+                float.TryParse(textBox3.Text, out factor);
+
                 _surface.SimualtionSpeed = tmpSpeed;
+                _surface.WaveLen = waveLength;
+                _surface.DampenFactor = factor;
             }
+        }
+
+        private void HideLabelsAndTextBoxes()
+        {
+            label1.Hide();
+            label2.Hide();
+            label3.Hide();
+
+            textBox1.Hide();
+            textBox2.Hide();
+            textBox3.Hide();
+        }
+
+        private void ShowLabelsAndTextBoxes()
+        {
+            label1.Show();
+            label2.Show();
+            label3.Show();
+
+            textBox1.Show();
+            textBox2.Show();
+            textBox3.Show();
         }
 
         private void Init()
@@ -56,8 +87,9 @@ namespace GUI
             _surface.AddSource(new SurfacePoint(60, 60, 600f));
             _surface.AddSource(new SurfacePoint(90, 60, 600f));
 
-            _speed = _surface.SimualtionSpeed;
+            
             showSurfaceButton.Hide();
+            ShowLabelsAndTextBoxes();
         }
 
         private void ShowSurfaceButtonEvent(object sender, EventArgs e)
@@ -66,19 +98,19 @@ namespace GUI
             {
                 Init();
             }
-                
+
             //this.WindowState = FormWindowState.Normal;
-            //this.FormBorderStyle = FormBorderStyle.None;
+            this.FormBorderStyle = FormBorderStyle.None;
             //this.Bounds = Screen.PrimaryScreen.Bounds;
             this.TopMost = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.BackColor = Color.Black;
             SummerWave.Renderer.System.DSystem.StartRenderForm("Surface Rendering", 1920, 1080, false, _surface);
-            
+
         }
 
         private void GameChanger(object sender, EventArgs e)
         {
-            _speed = 1.3f;
             _surface.SimualtionSpeed = 1.4f;
         }
 
