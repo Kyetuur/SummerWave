@@ -24,7 +24,11 @@ namespace GUI
         {
             if (sur == null)
                 button3_Click(null, null);
+            this.WindowState = FormWindowState.Normal;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Bounds = Screen.PrimaryScreen.Bounds;
             SummerWave.Renderer.System.DSystem.StartRenderForm("Surface Rendering", 1920, 1080,false,sur);
+            
         }
 
         public void setText(string str)
