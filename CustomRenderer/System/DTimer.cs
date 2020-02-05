@@ -9,8 +9,6 @@ namespace SummerWave.Renderer.System
 
         public float FrameTime { get; private set; }
         public float CumulativeFrameTime { get; private set; }
-
-        // Public Methods
         public void Initialize()
         {
             _stopWatch = Stopwatch.StartNew();
