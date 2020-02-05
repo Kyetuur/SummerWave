@@ -16,6 +16,11 @@ namespace SummerWave.Renderer.Graphics.Models
             internal Vector4 color;
         }
 
+        public static float red { get; set; }
+        public static float green { get; set; }
+        public static float blue { get; set; }
+        public static float transparent { get; set; }
+
         private int Resolution;
         private SharpDX.Direct3D11.Buffer VertexBuffer { get; set; }
         private SharpDX.Direct3D11.Buffer IndexBuffer { get; set; }
@@ -38,7 +43,7 @@ namespace SummerWave.Renderer.Graphics.Models
             _device = device;
             try
             {
-                DVertexType[] vertices = GetVertexBuffer();
+                DVertexType[] vertices = GetVertexBuffer(red, green, blue);
                 int[] indices = GetIndexBuffer();
                 VertexBuffer = SharpDX.Direct3D11.Buffer.Create(device, BindFlags.VertexBuffer, vertices);
                 IndexBuffer = SharpDX.Direct3D11.Buffer.Create(device, BindFlags.IndexBuffer, indices);
@@ -48,7 +53,7 @@ namespace SummerWave.Renderer.Graphics.Models
                 throw new BufferNotInitializedException();
             }
         }
-        private DVertexType[] GetVertexBuffer()
+        private DVertexType[] GetVertexBuffer(float r = 1f, float g = 0.2f, float b = 0.1f)
         {
             VertexCount = Resolution * Resolution * 8;
             IndexCount = VertexCount;
@@ -69,7 +74,8 @@ namespace SummerWave.Renderer.Graphics.Models
                     else
                     {
                         vertices[index].position = new Vector3(positionX, _surface.Grid[i][j].Height / 100, positionZ);
-                        vertices[index].color = new Vector4(_surface.Grid[i][j].Height /1000, _surface.Grid[i][j].Height / 100, 1, 1f);
+                        //vertices[index].color = new Vector4(_surface.Grid[i][j].Height / 1000, _surface.Grid[i][j].Height / 100, 1, 0.51f);
+                        vertices[index].color = new Vector4(r, g, b, 1f);
                     }
 
 
@@ -122,7 +128,7 @@ namespace SummerWave.Renderer.Graphics.Models
             try
             {
                 VertexBuffer.Dispose();
-                var newBuffer = GetVertexBuffer();
+                var newBuffer = GetVertexBuffer(red, green, blue);
                 VertexBuffer = SharpDX.Direct3D11.Buffer.Create(_device, BindFlags.VertexBuffer, newBuffer);
             }
             catch
