@@ -90,6 +90,7 @@ namespace SimulationEngine
                         foreach (var source in Sources)
                         {
                             float dist = Distance(source, Grid[i][j]);
+                            dist = dist < 1f ? 1f : dist;
                             height += source.Height / (float)Math.Pow(dist, DampenFactor) * (float)Math.Cos(dist/WaveLen - m_iter / (60/SimualtionSpeed) * 2f * Math.PI % (4 * Math.PI));
                         }
                         newHeights[i][j] = height;
